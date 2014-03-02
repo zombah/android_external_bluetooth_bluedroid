@@ -1,8 +1,5 @@
 /******************************************************************************
  *
- *  Copyright (c) 2013, The Linux Foundation. All rights reserved.
- *  Not a Contribution.
- *
  *  Copyright (C) 2009-2012 Broadcom Corporation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -169,8 +166,7 @@ void lpm_tx_done(uint8_t is_tx_done);
 ******************************************************************************/
 
 /* Num of allowed outstanding HCI CMD packets */
-extern int num_hci_cmd_pkts ;
-extern tUSERIAL_IF *p_userial_if;
+volatile int num_hci_cmd_pkts = 1;
 
 /******************************************************************************
 **  Static variables
@@ -646,7 +642,7 @@ void hci_h4_send_msg(HC_BT_HDR *p_msg)
             *p = type;
             bytes_to_send = acl_pkt_size + 1; /* packet_size + message type */
 
-            bytes_sent = p_userial_if->write(event,(uint8_t *) p,bytes_to_send);
+            bytes_sent = userial_write(event,(uint8_t *) p,bytes_to_send);
 
             /* generate snoop trace message */
             btsnoop_capture(p_msg, FALSE);
@@ -700,7 +696,7 @@ void hci_h4_send_msg(HC_BT_HDR *p_msg)
     *p = type;
     bytes_to_send = p_msg->len + 1;     /* message_size + message type */
 
-    bytes_sent = p_userial_if->write(event,(uint8_t *) p, bytes_to_send);
+    bytes_sent = userial_write(event,(uint8_t *) p, bytes_to_send);
 
     p_msg->layer_specific = lay_spec;
 
@@ -762,7 +758,7 @@ uint16_t hci_h4_receive_msg(void)
     while (TRUE)
     {
         /* Read one byte to see if there is anything waiting to be read */
-        if (p_userial_if->read(0 /*dummy*/, &byte, 1) == 0)
+        if (userial_read(0 /*dummy*/, &byte, 1) == 0)
         {
             break;
         }
@@ -907,7 +903,7 @@ uint16_t hci_h4_receive_msg(void)
             if (p_cb->rcv_len > 0)
             {
                 /* Read in the rest of the message */
-                len = p_userial_if->read(0 /*dummy*/, \
+                len = userial_read(0 /*dummy*/, \
                       ((uint8_t *)(p_cb->p_rcv_msg+1) + p_cb->p_rcv_msg->len), \
                       p_cb->rcv_len);
                 p_cb->p_rcv_msg->len += len;
@@ -1074,8 +1070,6 @@ const tHCI_IF hci_h4_func_table =
     hci_h4_send_msg,
     hci_h4_send_int_cmd,
     hci_h4_get_acl_data_length,
-    NULL,
-    NULL,
     hci_h4_receive_msg
 };
 
