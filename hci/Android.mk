@@ -27,7 +27,9 @@ LOCAL_CFLAGS += -DHCI_H2
 
 LOCAL_SRC_FILES += \
         src/usb.c \
-        src/hci_h4.c
+	src/hci_h4.c \
+	src/userial_mct.c \
+        src/hci_mct.c
 
 LOCAL_C_INCLUDES += \
         external/libusb
