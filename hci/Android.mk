@@ -35,23 +35,13 @@ LOCAL_C_INCLUDES += \
 LOCAL_SHARED_LIBRARIES := \
         libusb
 
-endif
-
-ifeq ($(BLUETOOTH_HCI_USE_MCT),true)
-
-LOCAL_CFLAGS := -DHCI_USE_MCT
-
-LOCAL_SRC_FILES += \
-        src/hci_mct.c \
-        src/userial_mct.c
-
 else
 
 LOCAL_SRC_FILES += \
-        src/hci_h4.c \
-        src/userial.c
-
-endif
+        src/userial.c \
+        src/userial_mct.c \
+        src/hci_mct.c \
+        src/hci_h4.c
 
 ifeq ($(QCOM_BT_USE_SIBS),true)
 LOCAL_SRC_FILES += src/hci_ibs.c
