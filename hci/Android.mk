@@ -27,7 +27,6 @@ LOCAL_CFLAGS += -DHCI_H2
 
 LOCAL_SRC_FILES += \
         src/usb.c \
-        src/hci_h4.c
 
 LOCAL_C_INCLUDES += \
         external/libusb
@@ -35,7 +34,7 @@ LOCAL_C_INCLUDES += \
 LOCAL_SHARED_LIBRARIES := \
         libusb
 
-else
+endif
 
 LOCAL_SRC_FILES += \
         src/userial.c \
@@ -46,7 +45,6 @@ LOCAL_SRC_FILES += \
 ifeq ($(QCOM_BT_USE_SIBS),true)
 LOCAL_SRC_FILES += src/hci_ibs.c
 LOCAL_CFLAGS += -DQCOM_BT_SIBS_ENABLE
-endif
 endif
 
 LOCAL_C_INCLUDES += \
